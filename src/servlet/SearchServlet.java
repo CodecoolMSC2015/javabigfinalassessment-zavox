@@ -52,12 +52,12 @@ public class SearchServlet extends HttpServlet {
         return personSet;
     }
 
-    public void checkInSessionData(){}
-
-    public void storeDataInSession(){}
-
-    public void createOrderedList(){}
-
-    public void createResponse(){}
+//    public void checkInSessionData(){}
+//
+//    public void storeDataInSession(){}
+//
+//    public void createOrderedList(){}
+//
+//    public void createResponse(){}
 
 }
