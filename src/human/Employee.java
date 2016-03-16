@@ -5,9 +5,10 @@ public class Employee extends Person {
     public int salary;
     public String jobTitle;
 
-    public Employee(String name, String email) {
+    public Employee(String name, String email, int salary) {
         this.name = name;
         this.email = email;
+        this.salary = salary;
     }
 
     public int getSalary() {
@@ -26,11 +27,4 @@ public class Employee extends Person {
         this.jobTitle = jobTitle;
     }
 
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "salary=" + salary +
-                ", jobTitle='" + jobTitle + '\'' +
-                '}';
-    }
 }

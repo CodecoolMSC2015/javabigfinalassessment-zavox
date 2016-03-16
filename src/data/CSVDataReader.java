@@ -5,101 +5,105 @@ import human.Person;
 import human.Skill;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.*;
 
 public class CSVDataReader extends DataReader{
-    public String csvFilePath;
-
+    private String csvFilePath;
+    private List<Person> persons = new ArrayList<>();
 
     public CSVDataReader(String csvFilePath){
         this.csvFilePath = csvFilePath;
-
+        readPersons();
     }
 
     @Override
     public Set<Person> getPersons() {
-        Set<Person> choosenPersons = new HashSet<>();
-        HashMap<String,String> personData;
-        List<Person> persons = new ArrayList<>();
+        Set<Person> chosenPersons = new HashSet<>();
+        if(searchType.equals(SearchType.OPTIONAL)){
+            for(Person person : persons){
+                for(Skill skill: person.getSkillset()){
+                    if(searchCriteria.contains(skill.getName())){
+                        chosenPersons.add(person);
+                        break;
+                    }
+                }
+            }
+        }else if(searchType.equals(SearchType.MANDATORY)){
+            Set<String> testCriterias = new HashSet<>();
+            for(Person person : persons) {
+                for (Skill skill : person.getSkillset()) {
+                    if (searchCriteria.contains(skill.getName())) {
+                        testCriterias.add(skill.getName());
+                    }
+                }
+                if(searchCriteria.equals(testCriterias)){
+                    chosenPersons.add(person);
+                }
+                testCriterias.clear();
+            }
+        }
+        return chosenPersons;
+    }
+
+    private Person createPerson(String csvLine){
+        String[] csvLineSplitted = csvLine.split(",");
+        String name = csvLineSplitted[0];
+        String email = csvLineSplitted[1];
+
+        if(name.equals("Name")){
+            return null;
+        }
+        else if(!csvLine.endsWith(",")){
+            int salary = Integer.parseInt(csvLineSplitted[5]);
+            return new Employee(name,email,salary);
+
+        }else{
+            return new Person(name, email);
+        }
+
+    }
+
+    private Skill createSkill(String csvLine){
+
+        String[] csvLineSplitted = csvLine.split(",");
+        String skill = csvLineSplitted[2];
+        String skillDescription = csvLineSplitted[3];
+        double skillRate = Double.parseDouble(csvLineSplitted[4]);
+
+        return new Skill(skill,skillDescription,skillRate);
+    }
+
+    private void readPersons(){
         File csvFile = new File(csvFilePath);
         try {
             Scanner fileScanner = new Scanner(csvFile);
             while(fileScanner.hasNext()){
                 String csvLine = fileScanner.nextLine();
-                personData = getPersonData(csvLine);
-                if(personData.get("Name").equals("Name")){continue;}
 
-                double skillRate = Double.parseDouble(personData.get("SkillRate"));
-                Skill skill = new Skill(personData.get("Skill"), personData.get("SkillDescription"), skillRate);
+                Person person = createPerson(csvLine);
+                if(person == null){
+                    continue;
+                }
 
-                boolean skillAdded = false;
-                for(Person person :persons){
-                    String currentName = personData.get("Name");
-                    if(person.getName().equals(currentName)){
-//                        person.addSkill(skill);
-                        skillAdded= true;
+                Skill skill= createSkill(csvLine);
+
+                if(persons.contains(person)){
+                    for(Person p : persons){
+                        if(p.getName().equals(person.getName())){
+                            p.addSkill(skill);
+                        }
                     }
+                }else{
+                    person.addSkill(skill);
+                    persons.add(person);
                 }
-                if(!skillAdded){
-                    addPersonToList(personData,persons);
-                }
-
-
-//                System.out.println("SkillRate: "+personData.get("SkillRate"));
-
             }
             fileScanner.close();
 
-            System.out.println(persons);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return choosenPersons;
     }
-
-    public HashMap<String, String> getPersonData(String csvLine){
-        HashMap<String,String> personData;
-        String[] csvLineSplitted = csvLine.split(",");
-        personData = new HashMap<>();
-        personData.put("Name", csvLineSplitted[0]);
-        personData.put("Email", csvLineSplitted[1]);
-        personData.put("Skill", csvLineSplitted[2]);
-        personData.put("SkillDescription", csvLineSplitted[3]);
-        personData.put("SkillRate", csvLineSplitted[4]);
-        if(!csvLine.endsWith(",")){
-            personData.put("Salary",csvLineSplitted[5]);
-        }
-        return personData;
-    }
-
-    public void addPersonToList(HashMap<String,String> personData, List<Person> persons){
-        Employee employee;
-        Person person;
-        if (personData.get("Salary") != null) {
-            employee = new Employee(personData.get("Name"), personData.get("Email"));
-            int salary = Integer.parseInt(personData.get("Salary"));
-            employee.setSalary(salary);
-            persons.add(employee);
-        } else {
-            person = new Person(personData.get("Name"), personData.get("Email"));
-            persons.add(person);
-        }
-
-    }
-
-
-
-//    public Person checkPersonOptional(HashMap<String, String> personData){
-//        Person person;
-//        if
-//        person = new Person(personData.get("Name"), personData.get("Email"));
-//
-//
-//        return person;
-//    }
 
 
 
