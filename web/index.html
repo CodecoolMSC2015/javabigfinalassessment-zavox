@@ -5,6 +5,14 @@
     <title>Index</title>
 </head>
 <body>
+<form action="SearchServlet" method="post">
+        Skills:
+        <input type="text" name="skills"/><br/>
+        SearchType:
+        <input type="radio" name="searchType" value="optional" checked> Optional
+        <input type="radio" name="searchType" value="mandatory"> Mandatory<br/>
 
+    <input type="submit" name="action" value="Search"/>
+</form>
 </body>
 </html>
