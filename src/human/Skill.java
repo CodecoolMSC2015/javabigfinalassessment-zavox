@@ -22,4 +22,18 @@ public class Skill {
     public double getRate() {
         return rate;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        Skill skill=null;
+        if(o instanceof Person){
+            skill = (Skill) o;
+        }
+        return getName().equals(skill.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return -1;
+    }
 }

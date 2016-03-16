@@ -1,5 +1,6 @@
 package human;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -11,6 +12,7 @@ public class Person {
     public Person(String name, String email) {
         this.name = name;
         this.email = email;
+        skillSet = new ArrayList<>();
     }
 
     public Person() {

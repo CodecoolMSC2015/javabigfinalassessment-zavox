@@ -32,32 +32,28 @@ public class CSVDataReader extends DataReader{
                 personData = getPersonData(csvLine);
                 if(personData.get("Name").equals("Name")){continue;}
 
-//                if(personData.get("SkillRate != "))
-//                double skillRate = Double.parseDouble(personData.get("SkillRate"));
+                double skillRate = Double.parseDouble(personData.get("SkillRate"));
+                Skill skill = new Skill(personData.get("Skill"), personData.get("SkillDescription"), skillRate);
 
-                Skill skill = new Skill(personData.get("Skill"), personData.get("SkillDescription"), 5);
-
-
-                if (personData.get("Salary") != null) {
-                    Employee employee = new Employee(personData.get("Name"), personData.get("Email"));
-                    int salary = Integer.parseInt(personData.get("Salary"));
-                    employee.setSalary(salary);
-                    System.out.printf("Salary: "+personData.get("Salary"));
-                } else {
-                    Person person = new Person(personData.get("Name"), personData.get("Email"));
+                boolean skillAdded = false;
+                for(Person person :persons){
+                    String currentName = personData.get("Name");
+                    if(person.getName().equals(currentName)){
+//                        person.addSkill(skill);
+                        skillAdded= true;
+                    }
                 }
-                System.out.println("SkillRate: "+personData.get("SkillRate"));
+                if(!skillAdded){
+                    addPersonToList(personData,persons);
+                }
 
-//                if(persons.contains()){
-//                    human.addSkill(skill);
-//                }else{
-//                    persons.add(human);
-//                }
+
+//                System.out.println("SkillRate: "+personData.get("SkillRate"));
+
             }
             fileScanner.close();
 
             System.out.println(persons);
-            choosenPersons = (Set)persons;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -77,6 +73,21 @@ public class CSVDataReader extends DataReader{
             personData.put("Salary",csvLineSplitted[5]);
         }
         return personData;
+    }
+
+    public void addPersonToList(HashMap<String,String> personData, List<Person> persons){
+        Employee employee;
+        Person person;
+        if (personData.get("Salary") != null) {
+            employee = new Employee(personData.get("Name"), personData.get("Email"));
+            int salary = Integer.parseInt(personData.get("Salary"));
+            employee.setSalary(salary);
+            persons.add(employee);
+        } else {
+            person = new Person(personData.get("Name"), personData.get("Email"));
+            persons.add(person);
+        }
+
     }
 
 

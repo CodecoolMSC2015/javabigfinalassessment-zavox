@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -52,12 +53,14 @@ public class SearchServlet extends HttpServlet {
         return personSet;
     }
 
-//    public void checkInSessionData(){}
-//
-//    public void storeDataInSession(){}
-//
-//    public void createOrderedList(){}
-//
-//    public void createResponse(){}
+    public void checkInSessionData(){}
+
+    public void storeDataInSession(HttpServletRequest req, HttpServletResponse resp){
+        HttpSession session = req.getSession();
+    }
+
+    public void createOrderedList(){}
+
+    public void createResponse(){}
 
 }
